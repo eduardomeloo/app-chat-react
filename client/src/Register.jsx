@@ -26,6 +26,9 @@ export default function Register() {
                 <button className="bg-blue-500 text-white block w-full rounded-sm p-2">
                     Register
                 </button>
+                <div className="text-center mt-2">
+                    Already a member? <a href="">login here</a>
+                </div>
             </form>
         </div>
     );
