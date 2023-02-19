@@ -78,6 +78,3 @@ app.post('/register', async (req, res) => {
 })
 
 app.listen(4000);
-
-//appchat
-//ijxY8n7o6RsOzLNN
