@@ -45,9 +45,7 @@ export default function Chat() {
                     <div key={userId} onClick={() => setSelectedUserId(userId)} 
                         className={"border-b border-gray-100 py-2 pl-4 flex items-center gap-2 cursor-pointer "+(userId === selectedUserId ? 'bg-blue-50' : '')}>
                         {userId === selectedUserId && (
-                            <div className="w-1 bg-blue-500 h-12 rounded-r-md">
-
-                            </div>
+                            <div className="w-1 bg-blue-500 h-12 rounded-r-md"></div>
                         )} 
                         <div className="flex gap-2 items-center py-2 pl-4">
                             <Avatar username={onlinePeople[userId]} userId={userId} />
@@ -58,7 +56,11 @@ export default function Chat() {
             </div>
             <div className="flex flex-col bg-blue-50 w-2/3 p-2">
                 <div className="flex-grow">
-                    messages with selectd person
+                    {!selectedUserId && (
+                        <div className="flex h-full flex-grow items-center justify-center">
+                            <div className="text-gray-400">&larr; Select a person from the sidebar</div>
+                        </div>
+                    )}
                 </div>
                 <div className="flex gap-2">
                     <input  type="text" 
