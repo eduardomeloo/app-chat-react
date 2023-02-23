@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import Avatar from "./Avatar";
 import Logo from "./Logo";
-import {UserContext} from './UserContext'
+import {UserContext} from './UserContext';
+import {uniqBy} from 'lodash';
+
 export default function Chat() {
     const [ws, setWs] = useState(null);
     const [onlinePeople, setOnlinePeople] = useState({});
@@ -29,8 +31,8 @@ export default function Chat() {
         console.log(ev, messageData)
         if ('online' in messageData) {
             showOnlinePeople(messageData.online);
-        } else {
-            setMessages(prev => ([...prev, {isOur: false, text: messageData.text}]));
+        } else if ('text' in messageData) {
+            setMessages(prev => ([...prev, {...messageData}]));
         }
     }
 
@@ -46,6 +48,8 @@ export default function Chat() {
 
     const onlinePeopleExclOurUser = {...onlinePeople};
     delete onlinePeopleExclOurUser[id]
+
+    const messagesWithoutDupes = uniqBy(messages, 'id') 
 
     return (
         <div className="flex h-screen">
@@ -73,8 +77,12 @@ export default function Chat() {
                     )}
                     {!!selectedUserId && (
                         <div className="">
-                            {messages.map(message => (
-                                <div className="">{message.text}</div>
+                            {messagesWithoutDupes.map(message => (
+                                <div className="">
+                                    sender: {message.sender}
+                                    my id: {id}
+                                    {message.text}
+                                </div>
                             ))}
                         </div>
                     )}
