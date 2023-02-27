@@ -43,7 +43,11 @@ export default function Chat() {
             text: newMessageText
         }))
         setNewMessageText('');
-        setMessages(prev => ([...prev, {text: newMessageText, isOur: true}]))
+        setMessages(prev => ([...prev, {
+            text: newMessageText,
+            sender: id,
+            recipient: selectedUserId
+        }]))
     }
 
     const onlinePeopleExclOurUser = {...onlinePeople};
@@ -76,12 +80,14 @@ export default function Chat() {
                         </div>
                     )}
                     {!!selectedUserId && (
-                        <div className="">
+                        <div className="overflow-scroll">
                             {messagesWithoutDupes.map(message => (
-                                <div className="">
-                                    sender: {message.sender}
-                                    my id: {id}
-                                    {message.text}
+                                <div className={(message.sender === id ? 'text-right' : 'text-left')}>
+                                    <div className={"text-left inline-block p-2 my-2 rounded-sm text-sm " + (message.sender === id ? 'bg-blue-500 text-white' : 'bg-white text-gray-500')}>
+                                        sender: {message.sender}<br />
+                                        my id: {id}<br />
+                                        {message.text}
+                                    </div>
                                 </div>
                             ))}
                         </div>
