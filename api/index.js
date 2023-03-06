@@ -48,7 +48,6 @@ app.get('/messages/:userId', async (req, res) => {
     const {userId} =  req.params;
     const userData = await getUserDataFromRequest(req);
     const ourUserId = userData.userId;
-    console.log(userId, ourUserId)
     const messages = await Message.find({
         sender: {$in:[userId, ourUserId]},
         recipient: {$in:[userId, ourUserId]},
