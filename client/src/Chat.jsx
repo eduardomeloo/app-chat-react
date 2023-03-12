@@ -108,7 +108,7 @@ export default function Chat() {
                         key={userId}
                         id={userId} 
                         online={true}
-                        username={onlinePeopleExclOurUser[userId].username}
+                        username={onlinePeopleExclOurUser[userId]}
                         onClick={() => setSelectedUserId(userId)}
                         selected={userId === selectedUserId}
                     />
@@ -123,6 +123,7 @@ export default function Chat() {
                         selected={userId === selectedUserId}
                     />
                 ))}
+          
             </div>
             <div className="flex flex-col bg-blue-50 w-2/3 p-2">
                 <div className="flex-grow">
