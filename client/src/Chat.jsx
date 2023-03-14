@@ -72,31 +72,26 @@ export default function Chat() {
             file,
         }));
         
-        if (file) {
-            //await setTimeout(async () => {
-            //    console.log('entrou aquiiiiiii')
-                await axios.get('/messages/'+selectedUserId).then(async res => {
-                    await setMessages(res.data);
-                });
-           // }, 1000);
-        } else {
-            await setNewMessageText('');
-            await setMessages(prev => ([...prev, {
-                text: newMessageText,
-                sender: id,
-                recipient: selectedUserId,
-                _id: Date.now(),
-            }]));
-        }
+        await setNewMessageText('');
+        await setMessages(prev => ([...prev, {
+            text: newMessageText ? newMessageText : null,
+            file: file ? file.name : null,
+            sender: id,
+            recipient: selectedUserId,
+            _id: Date.now(),
+        }]));
+        
     }
 
     function sendFile(ev) {
-        console.log('entrou na função sendfile')
+        const parts = ev.target.files[0].name.split('.');
+        const ext = parts[parts.length-1];
+        const filename = Date.now() + '.' + ext;
         const reader = new FileReader();
         reader.readAsDataURL(ev.target.files[0]);
         reader.onload = () => {
             sendMessage(null, {
-                name: ev.target.files[0].name,
+                name: filename,
                 data: reader.result,
             })
         };

@@ -174,9 +174,9 @@ wss.on('connection', (connection, req) => {
         let filename = null;
         if (file) {
             console.log('entrou aquii')
-            const parts = file.name.split('.');
-            const ext = parts[parts.length-1];
-            filename = Date.now() + '.' + ext;
+            //const parts = file.name.split('.');
+            //const ext = parts[parts.length-1];
+            filename = file.name;
             const path = __dirname + '/uploads/' + filename;
             const bufferData = new Buffer.from(file.data.split(',')[1], 'base64');
             fs.writeFile(path, bufferData, (err) => {
