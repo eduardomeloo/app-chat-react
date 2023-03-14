@@ -21,11 +21,11 @@ export default function Chat() {
         connectToWs()
     },[selectedUserId]);
 
-    function connectToWs() {
+    async function connectToWs() {
         const ws = new WebSocket('ws://localhost:4000');
         setWs(ws)
-        ws.addEventListener('message', handleMessage);
-        ws.addEventListener('close', () => {
+        await ws.addEventListener('message', handleMessage);
+        await ws.addEventListener('close', () => {
             setTimeout(() => {
                 console.log('Disconnected. Trying to reconnect.')
                 connectToWs()
@@ -66,24 +66,22 @@ export default function Chat() {
 
         if (ev) ev.preventDefault(); //Essa instrução serve para não recarregar a página
 
-        ws.send(JSON.stringify({
+        await ws.send(JSON.stringify({
             recipient: selectedUserId,
             text: newMessageText,
             file,
         }));
-
-        console.log(file)
         
         if (file) {
-            console.log('entrou aquiiiiiiiiiiiii')
-            await axios.get('/messages/'+selectedUserId).then(res => {
-                setMessages(res.data);
-                console.log('aquiiiiiiiiiiiii')
-                console.log(res.data)
-            });
+            //await setTimeout(async () => {
+            //    console.log('entrou aquiiiiiii')
+                await axios.get('/messages/'+selectedUserId).then(async res => {
+                    await setMessages(res.data);
+                });
+           // }, 1000);
         } else {
-            setNewMessageText('');
-            setMessages(prev => ([...prev, {
+            await setNewMessageText('');
+            await setMessages(prev => ([...prev, {
                 text: newMessageText,
                 sender: id,
                 recipient: selectedUserId,
@@ -93,6 +91,7 @@ export default function Chat() {
     }
 
     function sendFile(ev) {
+        console.log('entrou na função sendfile')
         const reader = new FileReader();
         reader.readAsDataURL(ev.target.files[0]);
         reader.onload = () => {
@@ -127,8 +126,8 @@ export default function Chat() {
 
     useEffect(() => {
         if (selectedUserId) {
-            axios.get('/messages/' + selectedUserId).then(res => {
-                setMessages(res.data)
+            axios.get('/messages/' + selectedUserId).then(async res => {
+                await setMessages(res.data)
             });
         }
     },[selectedUserId]);
@@ -223,7 +222,8 @@ export default function Chat() {
                         className="bg-blue-200 p-2 text-gray-600 cursor-pointer rounded-sm border border-blue-200">
                         <input  type="file" 
                                 className="hidden"
-                                onChange={sendFile}        
+                                onChange={async ev => await sendFile(ev)}
+                                onClick={e => (e.target.value = null)}     
                         />
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                             <path fillRule="evenodd" d="M18.97 3.659a2.25 2.25 0 00-3.182 0l-10.94 10.94a3.75 3.75 0 105.304 5.303l7.693-7.693a.75.75 0 011.06 1.06l-7.693 7.693a5.25 5.25 0 11-7.424-7.424l10.939-10.94a3.75 3.75 0 115.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 015.91 15.66l7.81-7.81a.75.75 0 011.061 1.06l-7.81 7.81a.75.75 0 001.054 1.068L18.97 6.84a2.25 2.25 0 000-3.182z" clipRule="evenodd" />

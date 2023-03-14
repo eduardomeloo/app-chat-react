@@ -12,6 +12,8 @@ const fs = require('fs');
 
 dotenv.config();
 
+mongoose.set("strictQuery", true);
+
 mongoose.connect(process.env.MONGO_URL, (err) => {
     if(err) throw err;
 });
@@ -40,7 +42,6 @@ async function getUserDataFromRequest(req) {
             reject('no token')
         }
     });
-    
 }
 
 app.get('/test', (req, res) => {
@@ -48,7 +49,6 @@ app.get('/test', (req, res) => {
 })
 
 app.get('/messages/:userId', async (req, res) => {
-    console.log('entrou aqui')
     const {userId} =  req.params;
     const userData = await getUserDataFromRequest(req);
     const ourUserId = userData.userId;
@@ -56,8 +56,7 @@ app.get('/messages/:userId', async (req, res) => {
         sender: {$in:[userId, ourUserId]},
         recipient: {$in:[userId, ourUserId]},
     }).sort({createdAt: 1});
-    console.log(messages)
-    res.json(messages)
+    res.json(messages);
 });
 
 app.get('/people', async (req, res) => {
@@ -174,13 +173,14 @@ wss.on('connection', (connection, req) => {
         const {recipient, text, file} = messageData;
         let filename = null;
         if (file) {
+            console.log('entrou aquii')
             const parts = file.name.split('.');
             const ext = parts[parts.length-1];
             filename = Date.now() + '.' + ext;
             const path = __dirname + '/uploads/' + filename;
-            const bufferData = new Buffer(file.data.split(',')[1], 'base64');
-            fs.writeFile(path, bufferData, () => {
-                console.log('file saved: ' + path);
+            const bufferData = new Buffer.from(file.data.split(',')[1], 'base64');
+            fs.writeFile(path, bufferData, (err) => {
+                if (err) console.log('ERROR!!!!', err);
             });
         }
         if (recipient && (text || file)) {
