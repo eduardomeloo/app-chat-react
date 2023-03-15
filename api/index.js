@@ -9,6 +9,7 @@ const User = require('./models/User');
 const Message = require('./models/Message');
 const ws = require('ws');
 const fs = require('fs');
+const schedule = require('./jobs/resetApp')
 
 dotenv.config();
 
@@ -89,7 +90,11 @@ app.post('/login', async (req, res) => {
                     id: foundUser._id,
                 })
             })
+        } else {
+            return res.status(400).send({msg: 'Usuário ou Senha Incorretos'})
         }
+    } else {
+        return res.status(400).send({msg: 'Usuário ou Senha Incorretos'})
     }
 })
 
