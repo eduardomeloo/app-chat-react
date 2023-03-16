@@ -15,14 +15,22 @@ export default function RegisterAndLoginForm() {
         ev.preventDefault()
         const url = isLoginOrRegister === 'register' ? 'register' : 'login'
         const {data} = await axios.post(url, {username, password}).then().catch(error => error.response)
-        if (data === "Usuário ou Senha Incorretos") {
+
+        if (data === "Usuário ou Senha Incorretos" && url === 'login') {
             setMsgError('Usuário ou Senha Incorretos')
             setShow(true)
             setTimeout(() => {
                 setShow(false)
                 setMsgError('')
             }, 3000);
-        } else {
+        } else if (data === "Esse login já pertence a outro usuário" && url === 'register') {
+            setMsgError('Esse login já pertence a outro usuário, tente outro.')
+            setShow(true)
+            setTimeout(() => {
+                setShow(false)
+                setMsgError('')
+            }, 3000);
+        } else{
             setLoggedInUsername(username)
             setId(data.id)
         }
@@ -97,6 +105,46 @@ export default function RegisterAndLoginForm() {
                     </div>
                     )}
                 </div>
+                
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <caption className="p-5 text-lg font-semibold text-center text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                            Acesso
+                            <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                Acessos para teste    
+                            </p>
+                        </caption>
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" className="px-6 py-3">
+                                    Username
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Password
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    teste
+                                </th>
+                                <td className="px-6 py-4">
+                                    teste
+                                </td>
+                            </tr>
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    teste1
+                                </th>
+                                <td className="px-6 py-4">
+                                    teste1
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </form>
         </div>
     );
