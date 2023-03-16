@@ -81,21 +81,26 @@ app.get('/profile', async(req, res) => {
 
 app.post('/login', async (req, res) => {
     const {username, password} = req.body;
-    const foundUser = await User.findOne({username})
-    if(foundUser) {
-        const passOk = bcrypt.compareSync(password, foundUser.password)
-        if(passOk) {
-            jwt.sign({userId: foundUser._id, username}, jwtSecret, {}, (err, token) => {
-                res.cookie('token', token, {sameSite: 'none', secure: true}).json({
-                    id: foundUser._id,
+    try {
+        const foundUser = await User.findOne({username})
+        if(foundUser) {
+            const passOk = bcrypt.compareSync(password, foundUser.password)
+            if(passOk) {
+                jwt.sign({userId: foundUser._id, username}, jwtSecret, {}, (err, token) => {
+                    res.cookie('token', token, {sameSite: 'none', secure: true}).json({
+                        id: foundUser._id,
+                    })
                 })
-            })
+            } else {
+                res.status(401).json('Usuário ou Senha Incorretos')
+            }
         } else {
-            return res.status(400).send({msg: 'Usuário ou Senha Incorretos'})
+            res.status(401).json('Usuário ou Senha Incorretos')
         }
-    } else {
-        return res.status(400).send({msg: 'Usuário ou Senha Incorretos'})
+    } catch (error) {
+        res.status(401).json('Usuário ou Senha Incorretos')
     }
+    
 })
 
 app.post('/logout', (req, res) => {
