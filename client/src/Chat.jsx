@@ -22,7 +22,7 @@ export default function Chat() {
     },[selectedUserId]);
 
     async function connectToWs() {
-        const ws = new WebSocket('ws://godfood.com.br:4000');
+        const ws = new WebSocket('ws://appchat.eduardopmelo.com.br');
         setWs(ws)
         await ws.addEventListener('message', handleMessage);
         await ws.addEventListener('close', () => {

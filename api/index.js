@@ -36,7 +36,6 @@ app.use(cors({
 app.use(history());
 app.use(express.static(path.join(__dirname, '/dist/')))
 
-
 async function getUserDataFromRequest(req) {
     return new Promise((resolve, reject) => {
         const token = req.cookies?.token;
