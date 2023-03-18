@@ -36,25 +36,7 @@ export default function RegisterAndLoginForm() {
         }
         
     }
-    /*
-    
-     <Alert
-                className="bg-blue-gray-600 max-w-screen-md m-2"
-                show={show}
-                color="red"
-                dismissible={{
-                onClose: () => setShow(false),
-                action: (
-                    <Button variant="text" color="white" size="sm">
-                    Close
-                    </Button>
-                ),
-                }}
-            >
-                Sorry, something went wrong please try again.
-            </Alert>
-            
-            */
+
     return (
         <div className="bg-blue-50 h-screen flex items-center flex-col justify-center">
             
