@@ -30,8 +30,8 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
     credentials: true,
-    //origin: '*',
-    origin: process.env.CLIENT_URL,
+    origin: '*',
+    //origin: process.env.CLIENT_URL,
 }))
 app.use(history());
 app.use(express.static(path.join(__dirname, '/dist/')))
