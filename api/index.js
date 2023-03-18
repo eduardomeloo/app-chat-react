@@ -10,6 +10,8 @@ const Message = require('./models/Message');
 const ws = require('ws');
 const fs = require('fs');
 const schedule = require('./jobs/resetApp')
+const history = require('connect-history-api-fallback');
+const path =  require('path');
 
 dotenv.config();
 
@@ -22,6 +24,7 @@ const jwtSecret = process.env.JWT_SECRET
 const bcryptSalt = bcrypt.genSaltSync(10)
 
 const app = express();
+
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(express.json())
 app.use(cookieParser())
@@ -30,6 +33,9 @@ app.use(cors({
     //origin: '*',
     origin: process.env.CLIENT_URL,
 }))
+app.use(history());
+app.use(express.static(path.join(__dirname, '/dist/')))
+
 
 async function getUserDataFromRequest(req) {
     return new Promise((resolve, reject) => {
