@@ -227,6 +227,7 @@ export default function Chat() {
                         </svg>
 
                         {Object.keys(onlinePeopleExclOurUser).map(userId => (
+                            userId === selectedUserId ? 
                             <Contact 
                                 key={userId}
                                 id={userId} 
@@ -234,9 +235,10 @@ export default function Chat() {
                                 username={onlinePeopleExclOurUser[userId]}
                                 onClick={() => setSelectedUserId(null)}
                                 selected={userId === selectedUserId}
-                            />
+                            /> : null
                         ))}
                         {Object.keys(offlinePeople).map(userId => (
+                            userId === selectedUserId ?
                             <Contact 
                                 key={userId}
                                 id={userId} 
@@ -244,9 +246,10 @@ export default function Chat() {
                                 username={offlinePeople[userId].username}
                                 onClick={() => setSelectedUserId(null)}
                                 selected={userId === selectedUserId}
-                            />
+                            /> : null
                         ))}
                     </div>
+                    <hr className="border-blue-gray-400" />
                     <div className="flex-grow">
                         {!!selectedUserId && (
                             <div className="relative h-full">
