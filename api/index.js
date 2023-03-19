@@ -16,7 +16,6 @@ const path =  require('path');
 dotenv.config();
 
 mongoose.set("strictQuery", true);
-
 mongoose.connect(process.env.MONGO_URL, (err) => {
     if(err) throw err;
 });
@@ -28,11 +27,25 @@ const app = express();
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(express.json())
 app.use(cookieParser())
+
+const whitelist = ['https://www.appchat.eduardopmelo.com.br', 'https://appchat.eduardopmelo.com.br', 'wss://appchat.eduardopmelo.com.br'];
+
 app.use(cors({
+    origin: true,
+    optionsSuccessStatus: 200,
     credentials: true,
-    origin: '*',
-    //origin: process.env.CLIENT_URL,
-}))
+  })
+);
+
+app.options(
+  '*',
+  cors({
+    origin: true,
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+);
+
 app.use(history());
 app.use(express.static(path.join(__dirname, '/dist/')))
 
@@ -49,10 +62,6 @@ async function getUserDataFromRequest(req) {
         }
     });
 }
-
-app.get('/test', (req, res) => {
-    res.json("test ok")
-})
 
 app.get('/messages/:userId', async (req, res) => {
     const {userId} =  req.params;
