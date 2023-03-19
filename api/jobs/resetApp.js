@@ -16,28 +16,30 @@ dotenv.config();
 
 schedule.scheduleJob('0 6 */1 * *' , async function () {
     
-    await Message.deleteMany()
-    await User.deleteMany()
-
-    const bcryptSalt = bcrypt.genSaltSync(10)
-
-    const username = 'teste'
-    const password = 'teste'
-
-    const username1 = 'teste1'
-    const password1 = 'teste1'
-
-    try {
-        const hashedPassword = bcrypt.hashSync(password, bcryptSalt)
-        const hashedPassword1 = bcrypt.hashSync(password1, bcryptSalt)
-
-        await User.create({username: username,  password: hashedPassword });
-        await User.create({username: username1, password: hashedPassword1 });
-
-    } catch(err) {
-        if(err) throw err;
-        res.status(500).json('error')
-    }
+    await Message.deleteMany().then().catch(err => console.log(err))
+    await User.deleteMany().then(async res => {
+        if (res.deletedCount > 0) {
+            try {
+                const bcryptSalt = bcrypt.genSaltSync(10)
+        
+                const username = 'teste'
+                const password = 'teste'
+        
+                const username1 = 'teste1'
+                const password1 = 'teste1'
+        
+                const hashedPassword = bcrypt.hashSync(password, bcryptSalt)
+                const hashedPassword1 = bcrypt.hashSync(password1, bcryptSalt)
+        
+                await User.create({username: username,  password: hashedPassword });
+                await User.create({username: username1, password: hashedPassword1 });
+        
+            } catch(err) {
+                if(err) throw err;
+                res.status(500).json('error')
+            }
+        }
+    }).catch(err => console.log(err))
 
     try {
         const folderPath = path.join(__dirname, '../uploads')

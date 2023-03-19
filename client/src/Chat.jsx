@@ -15,6 +15,7 @@ export default function Chat() {
     const [messages, setMessages] = useState([])
     const {username, id, setId, setUsername} = useContext(UserContext)
     const divUnderMessages = useRef()
+    const inputMessage = useRef(null);
     const [windowSize, setWindowSize] = useState([
         window.innerWidth,
         window.innerHeight,
@@ -25,8 +26,8 @@ export default function Chat() {
     },[selectedUserId]);
 
     async function connectToWs() {
-        //const ws = new WebSocket('wss://appchat.eduardopmelo.com.br');
-        const ws = new WebSocket('ws://localhost:4000');
+        const ws = new WebSocket('wss://appchat.eduardopmelo.com.br');
+        //const ws = new WebSocket('ws://localhost:4000');
         setWs(ws)
         await ws.addEventListener('message', handleMessage);
         await ws.addEventListener('close', () => {
@@ -96,7 +97,8 @@ export default function Chat() {
             recipient: selectedUserId,
             _id: Date.now(),
         }]));
-        
+
+        inputMessage.current.focus();
     }
 
     function sendFile(ev) {
@@ -119,6 +121,12 @@ export default function Chat() {
             div.scrollIntoView({behavior: 'smooth', block:'end'})
         }
     }, [messages]);
+
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+    });
 
     useEffect(() => {
         axios.get('/people').then(res => {
@@ -321,7 +329,8 @@ export default function Chat() {
                             value={newMessageText}
                             onChange={ev => setNewMessageText(ev.target.value)}
                             placeholder="Type your message here" 
-                            className="bg-white flex-grow rounded-sm border p-2" />
+                            className="bg-white flex-grow rounded-sm border p-2"
+                            ref={inputMessage}  />
                     <label 
                         className="bg-blue-200 p-2 text-gray-600 cursor-pointer rounded-sm border border-blue-200">
                         <input  type="file" 

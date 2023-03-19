@@ -59,11 +59,13 @@ export default function RegisterAndLoginForm() {
             <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
                 <input  value={username} type="text" placeholder="username"
                         onChange={event => setUsername(event.target.value)} 
-                        className="block w-full rounded-sm p-2 mb-2 border" />
+                        className="block w-full rounded-sm p-2 mb-2 border"
+                        autocomplete="no" />
 
                 <input  value={password} type="password" placeholder="password"
                         onChange={event => setPassword(event.target.value)}
-                        className="block w-full rounded-sm p-2 mb-2 border" />
+                        className="block w-full rounded-sm p-2 mb-2 border"
+                        autocomplete="no" />
 
                 <button className="bg-blue-500 text-white block w-full rounded-sm p-2">
                     {isLoginOrRegister === 'register' ? 'Register' : 'Login'}
